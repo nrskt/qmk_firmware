@@ -17,13 +17,12 @@ typedef struct {
 } td_tap_t;
 
 enum {
-  CT_L_BB,
-  CT_R_BB,
   CT_A_F10,
   CT_S_F7,
   CT_LY_1_2,
   CT_LY_2_3,
   CT_MOD,
+  CT_XM_SFT,
 };
 
 // define custom key
@@ -34,6 +33,7 @@ enum {
 #define XM_RST  LGUI(LALT(LSFT(KC_SPC)))
 #define XM_60   LGUI(LALT(KC_V))
 #define XM_50   LGUI(LALT(KC_SPC))
+#define XM_SFT TD(CT_XM_SFT)
 
 td_state_t cur_dance(qk_tap_dance_state_t *state);
 
@@ -46,13 +46,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                        KC_LBRC, KC_GRV,                                              KC_PLUS, KC_EQL, 
                                   LY_12,       LY_12,            LY_23,           LY_23, 
                                   KC_LCTL,     TAP_SPC,          RSFT_T(KC_BSPC), TD(CT_A_F10), 
-                                  KC_LGUI,     KC_LSFT,           KC_ENT,          TD(CT_S_F7)),
+                                  XM_SFT,      KC_SPC,           KC_ENT,          TD(CT_S_F7)),
 
   [1] = LAYOUT_5x6(
         RESET,   KC_F1,   KC_F2,   KC_F3,       KC_F4,       KC_F5,              KC_F6,       KC_F7,       KC_F8,   KC_F9,   KC_F10,  KC_F11, 
         _______, _______, _______, _______,     _______,     _______,            KC_CIRC,     KC_AMPR,     KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, 
-        _______, _______, _______, LCTL(KC_F6), LCTL(KC_F7), _______,            TD(CT_L_BB), TD(CT_R_BB), KC_UP,   KC_RGHT, KC_LBRC, KC_RBRC, 
-        _______, _______, _______, _______,     _______,     _______,            KC_GRV,      KC_EQL,      KC_LABK, KC_RABK, KC_QUES, KC_PIPE, 
+        _______, _______, _______, LCTL(KC_F6), LCTL(KC_F7), _______,            KC_LCBR,     KC_RCBR,     KC_LBRC, KC_RBRC, KC_GRV,  KC_RBRC, 
+        _______, _______, _______, _______,     _______,     _______,            KC_PLUS,     KC_EQL,      KC_LABK, KC_RABK, KC_QUES, KC_PIPE, 
                           _______, _______,                                                        _______, _______, 
                                               _______, _______,         _______, _______, 
                                               _______, KC_SPC,          _______, KC_F10, 
@@ -80,10 +80,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
+    bool is_new_dance = QK_TAP_DANCE <= state->interrupting_keycode && state->interrupting_keycode <= QK_TAP_DANCE_MAX;
     if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+        if (state->pressed && !is_new_dance) {
+            return TD_SINGLE_HOLD;
+        } else {
+            return TD_SINGLE_TAP;
+        }
+        // if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
         // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
-        else return TD_SINGLE_HOLD;
+        // else return TD_SINGLE_HOLD;
     } else if (state->count == 2) {
         if (state->interrupted || !state->pressed) return TD_DOUBLE_TAP;
         // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
@@ -102,9 +108,9 @@ static td_tap_t ct_mod_tap_state = {
 void ct_mod_finished(qk_tap_dance_state_t *state, void *user_data) {
     ct_mod_tap_state.state = cur_dance(state);
     switch (ct_mod_tap_state.state) {
-        case TD_SINGLE_TAP: register_code(KC_SPC); break;
+        case TD_SINGLE_TAP: set_oneshot_mods(MOD_LSFT); break;
         case TD_SINGLE_HOLD: register_code(KC_LSFT); break;
-        case TD_DOUBLE_TAP: layer_on(1); break;
+        case TD_DOUBLE_TAP: set_oneshot_layer(1, ONESHOT_START); break;
         case TD_DOUBLE_HOLD: layer_on(1); break;
         case TD_NONE: break;
     }
@@ -112,9 +118,9 @@ void ct_mod_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void ct_mod_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (ct_mod_tap_state.state) {
-        case TD_SINGLE_TAP: unregister_code(KC_SPC); break;
+        case TD_SINGLE_TAP: clear_oneshot_mods(); break;
         case TD_SINGLE_HOLD: unregister_code(KC_LSFT); break;
-        case TD_DOUBLE_TAP: layer_off(1); break;
+        case TD_DOUBLE_TAP: clear_oneshot_layer_state(ONESHOT_PRESSED); break;
         case TD_DOUBLE_HOLD: layer_off(1); break;
         case TD_NONE: break;
     }
@@ -177,13 +183,47 @@ void ct_23_reset(qk_tap_dance_state_t *state, void *user_data) {
     ct_23_tap_state.state = TD_NONE;
 }
 
+static td_tap_t ct_xm_sft_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+
+// Tap Dance for lgui
+void ct_xm_sft_finished(qk_tap_dance_state_t *state, void *user_data) {
+    ct_xm_sft_tap_state.state = cur_dance(state);
+    switch (ct_xm_sft_tap_state.state) {
+        case TD_SINGLE_TAP: register_mods(MOD_BIT(KC_LGUI)); break;
+        case TD_SINGLE_HOLD: register_mods(MOD_BIT(KC_LGUI)); break;
+        case TD_DOUBLE_TAP: 
+            register_mods(MOD_BIT(KC_LGUI));
+            register_mods(MOD_BIT(KC_LSFT));
+            break;
+        case TD_DOUBLE_HOLD: 
+            register_mods(MOD_BIT(KC_LGUI));
+            register_mods(MOD_BIT(KC_LSFT));
+            break;
+        case TD_NONE: break;
+    }
+}
+
+void ct_xm_sft_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (ct_xm_sft_tap_state.state) {
+        case TD_SINGLE_TAP: clear_mods(); break;
+        case TD_SINGLE_HOLD: clear_mods(); break;
+        case TD_DOUBLE_TAP: clear_mods(); break;
+        case TD_DOUBLE_HOLD: clear_mods(); break;
+        case TD_NONE: break;
+    }
+    ct_xm_sft_tap_state.state = TD_NONE;
+}
+
 // All TapDance functions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [CT_L_BB] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_LBRC),
-    [CT_R_BB] = ACTION_TAP_DANCE_DOUBLE(KC_RCBR, KC_RBRC),
     [CT_A_F10] = ACTION_TAP_DANCE_DOUBLE(KC_LALT, KC_F10),
     [CT_S_F7] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_F7),
     [CT_LY_1_2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ct_12_finished, ct_12_reset),
     [CT_LY_2_3] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ct_23_finished, ct_23_reset),
-    [CT_MOD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ct_mod_finished, ct_mod_reset)  
+    [CT_MOD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ct_mod_finished, ct_mod_reset),  
+    [CT_XM_SFT] = ACTION_TAP_DANCE_DOUBLE(KC_LGUI, RSFT(KC_LGUI)),
 };
