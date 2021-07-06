@@ -261,9 +261,9 @@ void ct_ctl_sft_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void ct_ctl_sft_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (ct_ctl_sft_tap_state.state) {
-        case TD_SINGLE_TAP: clear_oneshot_layer_state(ONESHOT_PRESSED);  break;
+        case TD_SINGLE_TAP: clear_oneshot_mods();  break;
         case TD_SINGLE_HOLD: unregister_code(KC_LCTL); break;
-        case TD_DOUBLE_TAP: clear_oneshot_layer_state(ONESHOT_PRESSED); break;
+        case TD_DOUBLE_TAP: clear_oneshot_mods(); break;
         case TD_DOUBLE_HOLD: unregister_mods(MOD_MASK_CS); break;
         case TD_NONE: break;
     }
