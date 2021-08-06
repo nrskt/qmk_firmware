@@ -68,41 +68,36 @@ td_state_t cur_dance(qk_tap_dance_state_t *state);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[0] = LAYOUT_5x6(
-        KC_ESC,  KC_1, KC_2, KC_3, KC_4, KC_5,                           KC_6, KC_7, KC_8,    KC_9,   KC_0,    KC_BSPC,
-        KC_TAB,  KC_Q, KC_W, KC_E, KC_R, KC_T,                           KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_MINS, 
-        KC_LSFT, KC_A, KC_S, KC_D, KC_F, KC_G,                           KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_QUOT, 
-        RESET,   KC_Z, KC_X, KC_C, KC_V, KC_B,                           KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_BSLS, 
-        _______, _______, KC_LBRC, KC_GRV, _______, _______,             _______, _______, _______, _______,   _______, KC_SPC,
-        _______, _______, TAP_SPC, CTL_SFT, TD(CT_A_F10), RSFT_T(KC_BSPC),                           XM_SFT, LY_12, LY_23,    TD(CT_S_F7),   KC_ENT,    KC_X)
+        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,         KC_5,                  KC_6,    KC_7,    KC_8,    KC_9,        KC_0,    KC_BSPC,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,         KC_T,                  KC_Y,    KC_U,    KC_I,    KC_O,        KC_P,    KC_MINS, 
+        KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,         KC_G,                  KC_H,    KC_J,    KC_K,    KC_L,        KC_SCLN, KC_QUOT, 
+        RESET,   KC_Z,    KC_X,    KC_C,    KC_V,         KC_B,                  KC_N,    KC_M,    KC_COMM, KC_DOT,      KC_SLSH, KC_BSLS, 
+        _______, _______, KC_LBRC, KC_GRV,  _______,      _______,               _______, _______, _______, _______,     _______, KC_SPC,
+        _______, _______, TAP_SPC, CTL_SFT, TD(CT_A_F10), RSFT_T(KC_BSPC),       XM_SFT,  LY_12,   LY_23,   TD(CT_S_F7), KC_ENT,  _______),
 
-//   [1] = LAYOUT_5x6(
-//         RESET,   KC_F1,   KC_F2,   KC_F3,       KC_F4,       KC_F5,              KC_F6,       KC_F7,       KC_F8,   KC_F9,   KC_F10,  KC_F11, 
-//         _______, _______, _______, _______,     _______,     _______,            KC_CIRC,     KC_AMPR,     KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, 
-//         _______, _______, _______, LCTL(KC_F6), LCTL(KC_F7), _______,            KC_LCBR,     KC_RCBR,     KC_LBRC, KC_RBRC, KC_GRV,  KC_RBRC, 
-//         _______, _______, _______, _______,     _______,     _______,            KC_PLUS,     KC_EQL,      KC_LABK, KC_RABK, KC_QUES, KC_PIPE, 
-//                           _______, _______,                                                        _______, _______, 
-//                                               _______, _______,         _______, _______, 
-//                                               _______, KC_SPC,          _______, KC_F10, 
-//                                               _______, _______,         _______, KC_F7),
-//   [2] = LAYOUT_5x6(
-//         KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, 
-//         KC_MPRV, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    _______, _______, _______, _______, _______, _______, 
-//         KC_MPLY, _______, _______, _______, _______, _______,                    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______, 
-//         KC_MNXT, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, KC_SLEP, 
-//                           _______, _______,                                                        _______, _______, 
-//                                               _______, _______,         _______, _______, 
-//                                               XM_RST,  XM_SW,           _______, _______, 
-//                                               XM_60,   XM_50,           _______, _______),
+	[1] = LAYOUT_5x6(
+        RESET,   KC_F1,   KC_F2,   KC_F3,       KC_F4,       KC_F5,              KC_F6,       KC_F7,       KC_F8,   KC_F9,   KC_F10,  KC_F11, 
+        _______, _______, _______, _______,     _______,     _______,            KC_CIRC,     KC_AMPR,     KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, 
+        _______, _______, _______, LCTL(KC_F6), LCTL(KC_F7), _______,            KC_LCBR,     KC_RCBR,     KC_LBRC, KC_RBRC, KC_GRV,  KC_RBRC, 
+        _______, _______, _______, _______,     _______,     _______,            KC_PLUS,     KC_EQL,      KC_LABK, KC_RABK, KC_QUES, KC_PIPE, 
+        _______, _______, _______, _______,     _______,     _______,            _______,     _______,     _______, _______, _______, _______,
+        _______, _______, _______, _______,     _______,     _______,            _______,     _______,     _______, _______, _______, _______),
 
-//   [3] = LAYOUT_5x6(
-//         KC_NO,   XM_S1,   XM_S2,   XM_S3,   XM_S4,   XM_S5,                      XM_S6,   XM_S7,   XM_S8,   XM_S9,   KC_F10,  KC_F11, 
-//         KC_MPRV, XM_S_Q,  KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    _______, _______, _______, _______, XM_S_P,  _______, 
-//         KC_MPLY, _______, _______, _______, _______, _______,                    XM_S_L,  XM_S_D,  XM_S_U,  XM_S_R,  _______, _______, 
-//         KC_MNXT, _______, _______, XM_S_C,  _______, _______,                    _______, _______, _______, _______, _______, KC_SLEP, 
-//                           _______, _______,                                                        _______, _______, 
-//                                               _______, _______,            _______, _______, 
-//                                               _______, _______,            _______, _______, 
-//                                               _______, _______,            XM_TER,  _______)
+	[2] = LAYOUT_5x6(
+        KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, 
+        KC_MPRV, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    _______, _______, _______, _______, _______, _______, 
+        KC_MPLY, _______, _______, _______, _______, _______,                    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______, 
+        KC_MNXT, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, KC_SLEP, 
+        _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, XM_50,
+        _______, _______, XM_SW,   XM_RST,     _______,     _______,            XM_60,    _______, _______, _______, _______, _______),
+
+	[3] = LAYOUT_5x6(
+        KC_NO,   XM_S1,   XM_S2,   XM_S3,   XM_S4,   XM_S5,                      XM_S6,   XM_S7,   XM_S8,   XM_S9,   KC_F10,  KC_F11, 
+        KC_MPRV, XM_S_Q,  KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    _______, _______, _______, _______, XM_S_P,  _______, 
+        KC_MPLY, _______, _______, _______, _______, _______,                    XM_S_L,  XM_S_D,  XM_S_U,  XM_S_R,  _______, _______, 
+        KC_MNXT, _______, _______, XM_S_C,  _______, _______,                    _______, _______, _______, _______, _______, KC_SLEP, 
+        _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, XM_TER,  _______)
 };
 
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
